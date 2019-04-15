@@ -13,15 +13,12 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicDirectoryPath));
 
-let count = 0;
-
 io.on('connection', (socket) => {
     console.log('Connected to socket!');
-    socket.emit('countUpdated', count);
+    socket.emit('chatGroup', 'Welcome to the chat');
 
-    socket.on('increment', () => {
-        count++;
-        io.emit('countUpdated', count);
+    socket.on('sendMessage', (data) => {
+        io.emit('chatGroup', data)
     });
 });
 
