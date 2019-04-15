@@ -17,9 +17,15 @@ io.on('connection', (socket) => {
     console.log('Connected to socket!');
     socket.emit('chatGroup', 'Welcome to the chat');
 
+    socket.broadcast.emit('chatGroup', 'A new user has joined!');
+
     socket.on('sendMessage', (data) => {
         io.emit('chatGroup', data)
     });
+
+    socket.on('disconnect', () => {
+        io.emit('chatGroup', "A user has left a chat!");
+    })
 });
 
 server.listen(port , () => {
