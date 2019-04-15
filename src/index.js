@@ -13,8 +13,16 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicDirectoryPath));
 
-io.on('connection', () => {
-    console.log('New WebSocker connected!');
+let count = 0;
+
+io.on('connection', (socket) => {
+    console.log('Connected to socket!');
+    socket.emit('countUpdated', count);
+
+    socket.on('increment', () => {
+        count++;
+        io.emit('countUpdated', count);
+    });
 });
 
 server.listen(port , () => {
