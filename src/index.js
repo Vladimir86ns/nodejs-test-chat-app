@@ -23,9 +23,15 @@ io.on('connection', (socket) => {
         io.emit('chatGroup', data)
     });
 
+    socket.on('geoLocation', data => {
+        io.emit('chatGroup', `https://google.com/maps/@${data.long},${data.lat}`);
+    })
+
     socket.on('disconnect', () => {
         io.emit('chatGroup', "A user has left a chat!");
-    })
+    });
+
+    socket
 });
 
 server.listen(port , () => {
