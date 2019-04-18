@@ -1,13 +1,23 @@
 const socket = io();
 
+// ELEMENTS
 const $messageForm = document.querySelector('#message-form');
 const $messageFormInput = $messageForm.querySelector('input');
 const $messageFormButton = $messageForm.querySelector('button');
 const $sendLocationButton = document.querySelector('#send-location');
+const $messages = document.querySelector('#messages');
+
+// TEMPLATES
+const messageTemplate = document.querySelector('#message-template').innerHTML;
 
 
-socket.on('chatGroup', (data) => {
-    console.log(data);
+socket.on('chatGroup', (message) => {
+    console.log(message);
+    const html = Mustache.render(messageTemplate, {
+        message
+    });
+
+    $messages.insertAdjacentHTML('beforeend', html);
 });
 
 $messageForm.addEventListener('submit', (e) => {
