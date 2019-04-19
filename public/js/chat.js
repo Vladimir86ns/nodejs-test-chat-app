@@ -9,12 +9,23 @@ const $messages = document.querySelector('#messages');
 
 // TEMPLATES
 const messageTemplate = document.querySelector('#message-template').innerHTML;
-
+const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
 
 socket.on('chatGroup', (message) => {
     console.log(message);
+
     const html = Mustache.render(messageTemplate, {
         message
+    });
+
+    $messages.insertAdjacentHTML('beforeend', html);
+});
+
+socket.on('sendLocation', (url) => {
+    console.log(url);
+    
+    const html = Mustache.render(locationMessageTemplate, {
+        url
     });
 
     $messages.insertAdjacentHTML('beforeend', html);
@@ -47,7 +58,7 @@ $sendLocationButton.addEventListener('click', () => {
         const { latitude, longitude } = position.coords;
         socket.emit('geoLocation', { lat: latitude, long: longitude }, () => {
             $sendLocationButton.removeAttribute('disabled');
-            console.log('Location has been send!')
+            console.log('Location has been send!');
         })
     })
 });

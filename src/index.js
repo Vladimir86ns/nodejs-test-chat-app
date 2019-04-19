@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('geoLocation', (data, callback) => {
-        io.emit('chatGroup', `https://google.com/maps/@${data.long},${data.lat}`);
+        io.emit('sendLocation', `https://google.com/maps/@${data.long},${data.lat}`);
         callback();
     })
 
