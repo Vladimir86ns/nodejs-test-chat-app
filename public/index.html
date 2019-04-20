@@ -1,25 +1,45 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
+    <head>
+        <link rel="icon" href='./img/favicon.png'>
+        <link rel="stylesheet" href='./css/styles.min.css'>
+    </head>
     <body>
-        Chat App
-        <div id="messages"></div>
+        <div class="chat">
+            <div class="chat__sidebar">
 
-        <form id="message-form">
-            <input name="message" placeholder="Text Message">
-            <button>Send</button>
-        </form>
-        <button id="send-location">Send Location</button>
+            </div>
+            <div class="chat__main">
+                <div id="messages" class="chat__messages"></div>
+
+                <div class="compose">]
+                    <form id="message-form">
+                        <input name="message" placeholder="Text Message">
+                        <button>Send</button>
+                    </form>
+                    <button id="send-location">Send Location</button>
+                </div>
+            </div>
+
+        </div>
 
         <script id="message-template" type="text/html">
-            <div>
-                <p>{{ createAt }} - {{ message }}</p>
+            <div class="message">
+                <p>
+                    <span class="message__name">User Name</span>
+                    <span class="message__meta">{{ createAt }}</span>
+                </p>
+                <p>{{ message }}</p>
             </div>
         </script>
 
         <script id="location-message-template" type="text/html">
-            <div>
-                <a href="{{ url }}" target="_blank">{{ createAt }} - My current location</a>
+            <div class="message">
+                <p>
+                    <span class="message__name">User Name</span>
+                    <span class="message__meta">{{ createAt }}</span>
+                </p>
+                <p><a href="{{ url }}" target="_blank">{{ createAt }} - My current location</a></p>
             </div>
         </script>
 
