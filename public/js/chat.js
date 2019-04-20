@@ -12,7 +12,6 @@ const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
 
 socket.on('chatGroup', (message) => {
-    console.log(message)
     const html = Mustache.render(messageTemplate, {
         message: message.text,
         createAt: moment(message.createAt).format('h:mm a')
@@ -21,11 +20,10 @@ socket.on('chatGroup', (message) => {
     $messages.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('sendLocation', (url) => {
-    console.log(url);
-    
+socket.on('sendLocation', (data) => {
     const html = Mustache.render(locationMessageTemplate, {
-        url
+        url: data.url,
+        createAt: moment(data.createAt).format('h:mm a')
     });
 
     $messages.insertAdjacentHTML('beforeend', html);
