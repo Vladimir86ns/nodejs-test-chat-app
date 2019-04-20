@@ -4,6 +4,7 @@ var app = express();
 const http = require('http');
 const server = http.createServer(app);
 var Filter = require('bad-words');
+const { generateMessage } = require('./utils/message.js');
 
 const socketIo = require('socket.io');
 const io = socketIo(server);
@@ -16,9 +17,9 @@ app.use(express.static(publicDirectoryPath));
 
 io.on('connection', (socket) => {
     console.log('Connected to socket!');
-    socket.emit('chatGroup', 'Welcome to the chat');
+    socket.emit('chatGroup', generateMessage('Welcome to the chat!'));
 
-    socket.broadcast.emit('chatGroup', 'A new user has joined!');
+    socket.broadcast.emit('chatGroup', generateMessage('A new user has joined!'));
 
     socket.on('sendMessage', (data, callback) => {
         let filter = new Filter();
@@ -36,7 +37,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        io.emit('chatGroup', "A user has left a chat!");
+        io.emit('chatGroup', generateMessage('A user has left a chat!'));
     });
 
     socket

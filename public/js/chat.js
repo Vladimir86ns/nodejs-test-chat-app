@@ -12,10 +12,10 @@ const messageTemplate = document.querySelector('#message-template').innerHTML;
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
 
 socket.on('chatGroup', (message) => {
-    console.log(message);
-
+    console.log(message)
     const html = Mustache.render(messageTemplate, {
-        message
+        message: message.text,
+        createAt: moment(message.createAt).format('h:mm a')
     });
 
     $messages.insertAdjacentHTML('beforeend', html);

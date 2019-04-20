@@ -13,7 +13,7 @@
 
         <script id="message-template" type="text/html">
             <div>
-                <p>{{ message }}</p>
+                <p>{{ createAt }} - {{ message }}</p>
             </div>
         </script>
 
@@ -29,5 +29,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/chat.js"></script>
+        <script src="/src/utils/message.js"></script>
     </body>
 </html>
