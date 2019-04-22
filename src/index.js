@@ -17,9 +17,12 @@ app.use(express.static(publicDirectoryPath));
 
 io.on('connection', (socket) => {
     console.log('Connected to socket!');
-    socket.emit('chatGroup', generateMessage('Welcome to the chat!'));
+    socket.on('roomJoin', ({ username, room }) => {
+        socket.join(room);
 
-    socket.broadcast.emit('chatGroup', generateMessage('A new user has joined!'));
+        socket.emit('chatGroup', generateMessage('Welcome to the chat!'));
+        socket.broadcast.emit('chatGroup', generateMessage(`${username} has joined!`));
+    })
 
     socket.on('sendMessage', (data, callback) => {
         let filter = new Filter();
@@ -39,8 +42,6 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         io.emit('chatGroup', generateMessage('A user has left a chat!'));
     });
-
-    socket
 });
 
 server.listen(port , () => {
