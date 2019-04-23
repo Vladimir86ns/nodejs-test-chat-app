@@ -10,7 +10,7 @@ const addUser = ({id, username, room}) => {
         }
     }
 
-    const existingUser = user.find(user => {
+    const existingUser = users.find(user => {
         return user.room === room && user.username === username
     })
 
