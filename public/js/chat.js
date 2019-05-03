@@ -1,71 +1,80 @@
-const socket = io();
+const socket = io()
 
-// ELEMENTS
-const $messageForm = document.querySelector('#message-form');
-const $messageFormInput = $messageForm.querySelector('input');
-const $messageFormButton = $messageForm.querySelector('button');
-const $sendLocationButton = document.querySelector('#send-location');
-const $messages = document.querySelector('#messages');
+// Elements
+const $messageForm = document.querySelector('#message-form')
+const $messageFormInput = $messageForm.querySelector('input')
+const $messageFormButton = $messageForm.querySelector('button')
+const $sendLocationButton = document.querySelector('#send-location')
+const $messages = document.querySelector('#messages')
 
-// TEMPLATES
-const messageTemplate = document.querySelector('#message-template').innerHTML;
-const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML;
+// Templates
+const messageTemplate = document.querySelector('#message-template').innerHTML
+const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 
-const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
+// Options
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
-socket.on('chatGroup', (message) => {
+socket.on('message', (message) => {
+    console.log(message)
     const html = Mustache.render(messageTemplate, {
+        username: message.username,
         message: message.text,
-        createAt: moment(message.createAt).format('h:mm a')
-    });
+        createdAt: moment(message.createdAt).format('h:mm a')
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
+})
 
-    $messages.insertAdjacentHTML('beforeend', html);
-});
-
-socket.on('sendLocation', (data) => {
+socket.on('locationMessage', (message) => {
+    console.log(message)
     const html = Mustache.render(locationMessageTemplate, {
-        url: data.url,
-        createAt: moment(data.createAt).format('h:mm a')
-    });
-
-    $messages.insertAdjacentHTML('beforeend', html);
-});
+        username: message.username,
+        url: message.url,
+        createdAt: moment(message.createdAt).format('h:mm a')
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
+})
 
 $messageForm.addEventListener('submit', (e) => {
-    $messageFormButton.setAttribute('disabled', 'disabled');
+    e.preventDefault()
 
-    e.preventDefault();
-    const message = e.target.elements.message.value;
+    $messageFormButton.setAttribute('disabled', 'disabled')
+
+    const message = e.target.elements.message.value
+
     socket.emit('sendMessage', message, (error) => {
-        $messageFormButton.removeAttribute('disabled');
-        $messageFormInput.value = '';
-        $messageFormInput.focus();
+        $messageFormButton.removeAttribute('disabled')
+        $messageFormInput.value = ''
+        $messageFormInput.focus()
+
         if (error) {
-            return console.log(error);
+            return console.log(error)
         }
-        console.log('Message delivered!');
-    });
-});
+
+        console.log('Message delivered!')
+    })
+})
 
 $sendLocationButton.addEventListener('click', () => {
-    if(!navigator.geolocation) {
-        return alert('Geolocation is not supported by your browser!')
-    };
+    if (!navigator.geolocation) {
+        return alert('Geolocation is not supported by your browser.')
+    }
 
-    $sendLocationButton.setAttribute('disabled', 'disabled');
+    $sendLocationButton.setAttribute('disabled', 'disabled')
 
-    navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
-        socket.emit('geoLocation', { lat: latitude, long: longitude }, () => {
-            $sendLocationButton.removeAttribute('disabled');
-            console.log('Location has been send!');
+    navigator.geolocation.getCurrentPosition((position) => {
+        socket.emit('sendLocation', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        }, () => {
+            $sendLocationButton.removeAttribute('disabled')
+            console.log('Location shared!')  
         })
     })
-});
+})
 
-socket.emit('roomJoin', { username, room }, (error) => {
+socket.emit('join', { username, room }, (error) => {
     if (error) {
-        alert(error);
+        alert(error)
         location.href = '/'
     }
-});
+})
